@@ -1,5 +1,6 @@
 # spec/requests/todos_spec.rb
 require 'rails_helper'
+require 'swagger_helper'
 
 RSpec.describe 'Todos API', type: :request do
   # initialize test data
@@ -104,6 +105,92 @@ RSpec.describe 'Todos API', type: :request do
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
+    end
+  end
+
+  path '/todos' do
+    get('list todos') do
+      response(200, 'successful') do
+
+        after do |example|
+          example.metadata[:response][:examples] = { 'application/json' => JSON.parse(response.body, symbolize_names: true) }
+        end
+        run_test!
+      end
+    end
+    post('create todo') do
+      #requestBody {
+      #  content {
+          # 'application/json' => {
+          #   schema: {
+          #     type: :object,
+          #     properties: {
+          #       title: { type: :string},
+          #       created_by: { type: :string}
+          #     }
+          #   }
+          # }
+      #  }
+      #}
+      consumes 'application/json'
+      produces 'application/json'
+      parameter name: 'title', type: :string, in: :todo
+      parameter name: 'created_by', type: :string, in: :todo
+      # parameter name: "todo[title]", type: :string, in: :formData, required: true
+      # parameter name: "todo[created_by]", type: :string, in: :formData, required: true
+      parameter name: :todo, in: :body, required: true, schema: {
+        # '$ref' => '#/definitions/createTodo'
+        type: :object,
+        required: %i[title created_by],
+        properties: {
+          title: { type: :string },
+          created_by: { type: :string }
+        }
+      }
+      # parameter name: :blog, in: :body, schema: {
+      #   type: :object,
+      #   properties: {
+      #     title: { type: :string },
+      #     content: { type: :string }
+      #   },
+      #   required: [ 'title', 'content' ]
+      # }
+      response(201, 'successful') do
+        let(:todo) { { title: 'Learn Elm', created_by: '1' } }
+        # after do |example|
+        #   example.metadata[:response][:examples] = { 'application/json' => JSON.parse(response.body, symbolize_names: true) }
+        # end
+        run_test!
+      end
+    end
+  end
+
+  path '/todos/{id}' do
+    # You'll want to customize the parameter types...
+    parameter name: 'id', in: :path, type: :integer, description: 'id'
+
+    get('show todo') do
+      response(200, 'successful') do
+        let(:id) { 5 }
+        after do |example|
+          example.metadata[:response][:examples] = { 'application/json' => JSON.parse(response.body, symbolize_names: true) }
+        end
+        run_test!
+      end
+    end
+
+    put('update todo') do
+      parameter name: :todo, in: :body, schema: {
+        type: :object,
+        properties: {
+          title: { type: :string },
+          content: { type: :string }
+        },
+        required: ['title','content']
+      }
+    end
+
+    delete('delete todo') do
     end
   end
 end

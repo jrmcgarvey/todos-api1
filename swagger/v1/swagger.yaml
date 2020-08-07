@@ -1,0 +1,68 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/todos":
+    get:
+      summary: list todos
+      responses:
+        '200':
+          description: successful
+          content: {}
+    post:
+      summary: create todo
+      parameters:
+      - name: title
+        in: todo
+        schema:
+          type: string
+      - name: created_by
+        in: todo
+        schema:
+          type: string
+      responses:
+        '201':
+          description: successful
+          content: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - title
+              - created_by
+              properties:
+                title:
+                  type: string
+                created_by:
+                  type: string
+  "/todos/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: show todo
+      responses:
+        '200':
+          description: successful
+          content: {}
+servers:
+- url: ''
+definitions:
+  createTodo:
+    type: object
+    required:
+    - title
+    - created_by
+    properties:
+      title:
+        type: string
+      created_by:
+        type: string
