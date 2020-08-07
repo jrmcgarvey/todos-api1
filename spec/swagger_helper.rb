@@ -32,17 +32,7 @@ RSpec.configure do |config|
           # }
           url: "#{ENV['APPLICATION_URL']}"
         }
-      ],
-      definitions: {
-        createTodo: {
-          type: :object,
-          required: %i[title created_by],
-          properties: {
-            title: { type: :string },
-            created_by: { type: :string }
-          }
-        }
-      }
+      ]
     }
   }
 

@@ -4,24 +4,106 @@ info:
   title: API V1
   version: v1
 paths:
+  "/todos/{todo_id}/items":
+    parameters:
+    - name: todo_id
+      in: path
+      description: todo_id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: list items
+      tags:
+      - Items
+      responses:
+        '200':
+          description: success
+          content: {}
+    post:
+      summary: create item
+      tags:
+      - Items
+      parameters: []
+      responses:
+        '201':
+          description: success
+          content: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                done:
+                  type: boolean
+  "/todos/{todo_id}/items/{id}":
+    parameters:
+    - name: todo_id
+      in: path
+      description: todo_id
+      required: true
+      schema:
+        type: integer
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: show item
+      tags:
+      - Items
+      responses:
+        '200':
+          description: success
+          content: {}
+    put:
+      summary: update item
+      tags:
+      - Items
+      parameters: []
+      responses:
+        '204':
+          description: success
+          content: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                done:
+                  type: boolean
+    delete:
+      summary: delete item
+      tags:
+      - Items
+      responses:
+        '204':
+          description: success
+          content: {}
   "/todos":
     get:
       summary: list todos
+      tags:
+      - Todos
       responses:
         '200':
           description: successful
           content: {}
     post:
       summary: create todo
-      parameters:
-      - name: title
-        in: todo
-        schema:
-          type: string
-      - name: created_by
-        in: todo
-        schema:
-          type: string
+      tags:
+      - Todos
+      parameters: []
       responses:
         '201':
           description: successful
@@ -49,20 +131,28 @@ paths:
         type: integer
     get:
       summary: show todo
+      tags:
+      - Todos
       responses:
         '200':
           description: successful
           content: {}
+    put:
+      summary: update todo
+      tags:
+      - Todos
+      parameters: []
+      responses:
+        '204':
+          description: successful
+          content: {}
+    delete:
+      summary: delete todo
+      tags:
+      - Todos
+      responses:
+        '204':
+          description: successful
+          content: {}
 servers:
 - url: ''
-definitions:
-  createTodo:
-    type: object
-    required:
-    - title
-    - created_by
-    properties:
-      title:
-        type: string
-      created_by:
-        type: string
